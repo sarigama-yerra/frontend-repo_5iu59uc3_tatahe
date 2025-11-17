@@ -1,26 +1,32 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import Hero from './components/Hero'
+import HUD from './components/HUD'
+import Game from './components/Game'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activated, setActivated] = useState(false)
+  const [energy, setEnergy] = useState(10)
+  const [phase, setPhase] = useState('Standby')
+
+  const handleActivate = useCallback(() => {
+    setActivated(true)
+    setPhase('Calibration')
+  }, [])
+
+  const handleReset = useCallback(() => {
+    window.location.href = '/'
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen w-full bg-black">
+      {!activated ? (
+        <Hero onActivate={handleActivate} />
+      ) : (
+        <>
+          <HUD phase={phase} energy={energy} onReset={handleReset} />
+          <Game onComplete={() => {}} />
+        </>
+      )}
     </div>
   )
 }
